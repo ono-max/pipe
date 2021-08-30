@@ -150,6 +150,21 @@ func (e *Executor) Execute(sig executor.StopSignal) model.StageStatus {
 		})
 	}
 
+	// Run dynamic analyses with metrics providers.
+	for _, m := range options.Dynamic.Metrics {
+		// FIXME: Determine based on previous pipeline stages.
+		strategy := strategyPrevious
+		analyzer, err := newDynamicMetricsAnalyzer(strategy, m, templateCfg)
+		if err != nil {
+			e.LogPersister.Errorf("Failed to spawn dynamic analyzer for metrics: %v", err)
+			return model.StageStatus_STAGE_FAILURE
+		}
+		eg.Go(func() error {
+			e.LogPersister.Infof("[%s] Start analysis using dynamic data", m.Template)
+			return analyzer.run(ctx)
+		})
+	}
+
 	if err := eg.Wait(); err != nil {
 		e.LogPersister.Errorf("Analysis failed: %s", err.Error())
 		return model.StageStatus_STAGE_FAILURE

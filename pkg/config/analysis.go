@@ -150,9 +150,10 @@ type AnalysisDynamic struct {
 }
 
 type AnalysisDynamicMetrics struct {
-	Query    string   `json:"query"`
-	Provider string   `json:"provider"`
-	Timeout  Duration `json:"timeout"`
+	Template     string            `json:"template"`
+	PrimaryArgs  map[string]string `json:"primaryArgs"`
+	CanaryArgs   map[string]string `json:"canaryArgs"`
+	BaselineArgs map[string]string `json:"baselineArgs"`
 }
 
 type AnalysisDynamicLog struct {

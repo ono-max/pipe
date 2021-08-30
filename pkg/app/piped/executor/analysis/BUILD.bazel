@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "analysis.go",
         "analyzer.go",
+        "dynamic_analyzer.go",
     ],
     importpath = "github.com/pipe-cd/pipe/pkg/app/piped/executor/analysis",
     visibility = ["//visibility:public"],
